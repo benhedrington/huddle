@@ -26,6 +26,10 @@ Draft. In testing.
 
 [`dist/huddle.zip`](dist/huddle.zip) is the ready-to-upload skill file.
 
+## Prerequisites
+
+The Atlassian Rovo MCP server, connected to your AI client, with write access to Jira and Confluence. Setup: https://developer.atlassian.com/cloud/rovo-mcp/guides/getting-started/
+
 ## Using it in Claude
 
 Upload `dist/huddle.zip` as a skill, and connect the Atlassian (Rovo) connector so Claude can reach Jira and Confluence. The skill asks for your Confluence space the first time.
