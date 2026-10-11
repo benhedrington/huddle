@@ -2,7 +2,7 @@
 
 Stop handing off documents. Start building them together.
 
-Say "huddle PROJ-123" and the skill finds, or creates, one shared Confluence page for that ticket, where the PM, engineer, designer and architect frame the problem together, with AI in the room.
+Say "huddle PROJ-123" and the skill finds, or creates, one shared Confluence page for that ticket, where the product manager (PM), engineer, designer and architect frame the problem together, with AI in the room.
 
 ## Why
 
