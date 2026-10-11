@@ -20,7 +20,7 @@ https://www.atlassian.com/software/jira/product-discovery/resources/state-of-pro
 
 ## Status
 
-Draft. Not yet tested against an Atlassian connection.
+Draft. In testing.
 
 ## Download
 
