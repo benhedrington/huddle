@@ -24,7 +24,7 @@ Draft. In testing.
 
 ## Download
 
-[`dist/huddle.zip`](dist/huddle.zip) is the ready-to-upload skill file.
+[Download huddle.zip](https://github.com/benhedrington/huddle/raw/main/dist/huddle.zip), the ready-to-upload skill file.
 
 ## Prerequisites
 
