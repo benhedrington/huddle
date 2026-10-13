@@ -32,7 +32,7 @@ The Atlassian Rovo MCP server, connected to your AI client, with write access to
 
 ## Using it in Claude
 
-Upload `dist/huddle.zip` as a skill, and connect the Atlassian (Rovo) connector so Claude can reach Jira and Confluence. The skill asks for your Confluence space the first time.
+Upload `dist/huddle.zip` as a skill, and connect the Atlassian (Rovo) connector so Claude can reach Jira and Confluence. The skill looks for a Confluence space named `Huddles` with a hub page labelled `huddle-hub` and asks you to confirm it; if none exists it asks which space to use. Admins: see Admin setup in `SKILL.md`.
 
 ## License
 

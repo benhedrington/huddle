@@ -36,25 +36,50 @@ Lookup is flexible. Match on any of these values, and also on a close variant (a
 1. **Read the ticket.** Look for a remote link titled `Huddle`, a comment starting `Huddle page opened:`, or the ticket label `huddle`. Accept close variants, such as any remote link or comment pointing at a Confluence page that mentions the ticket.
 2. **If found:** open the page. Summarize it through the user's role lens (below). Show open questions and any empty sections. Stop.
 3. **If not found:** search Confluence for the page label `huddle-<key>`, then for the title `[<KEY>] Huddle`, then loosely for pages that mention the ticket key. This catches a page whose ticket link was lost. If one is found, repair the ticket link and label (step 6), then open it. Do not create a new page.
-4. **If still not found:** check the ticket level. If it is a story or a small fix, say so and suggest the parent epic. Otherwise ask: "No huddle page for <KEY>. Create one?"
-5. **On yes:** search once more right before creating, in case a teammate just did. Then create the page from `templates/page.md` under the hub page in `HUDDLE_SPACE` (see Where pages live), with the exact title and both labels from the table. Do not touch permissions.
+4. **If still not found:** check the ticket level. If it is a story or a small fix, say so and suggest the parent epic. Otherwise resolve the space and hub (see Where pages live), then ask in one question: "No huddle page for <KEY>. Create one in the Huddles space (<space key>), under <hub page>?"
+5. **On yes:** search once more right before creating, in case a teammate just did. Then create the page from `templates/page.md` under the hub page in `HUDDLE_SPACE` (see Where pages live; the confirmation named the space and hub), with the exact title and both labels from the table. Do not touch permissions.
 6. **After creating (or repairing):** read back who can view and edit the page (see Permissions). Only if the other roles can open it, on the Jira issue, add the label `huddle`, add the remote link titled `Huddle`, and post the comment `Huddle page opened: <page URL>`, followed by a line mentioning the PM, engineer, designer and architect on the ticket if they are known. That comment's timestamp records when the page opened.
 
 Always ask before creating. Never create a second page for a ticket that already has one.
 
 ## Where pages live
 
-Settings (ask the user once, then reuse for the session; never hardcode a company space in this file):
+Convention: the organization has a Confluence space named `Huddles`, with a hub page titled `Huddles` labelled `huddle-hub`. Admins set this up once (see Admin setup). Do not hardcode a company-specific space; the `Huddles` convention is the default and the search by that name is discovery, not a fixed value.
 
-- `HUDDLE_SPACE`: the Confluence space key where huddle pages are created.
-- `HUDDLE_HUB`: the title of the parent page in that space. Default: `Huddles`.
+Settings (reused for the session):
+
+- `HUDDLE_SPACE`: the space key where huddle pages are created.
+- `HUDDLE_HUB`: the hub page inside that space.
+
+Optional: a `config.md` next to `SKILL.md` may set `HUDDLE_SPACE` and `HUDDLE_HUB` for an organization without editing the skill.
+
+Finding the space:
+
+1. If `HUDDLE_SPACE` is already set (by the user or a config), use it.
+2. Otherwise search for a non-personal space named exactly `Huddles` (case-insensitive).
+   - Exactly one match: propose it and ask the user to confirm, naming the key. Example: "No huddle page for <KEY>. Create one in the Huddles space (<space key>), under <hub page>?"
+   - No match, more than one, or only close variants (for example `Team Huddles`): ask "Which Confluence space should huddle pages live in?" Do not guess.
+3. Once confirmed, reuse the answer for the session.
+
+Finding the hub:
+
+1. Within `HUDDLE_SPACE`, look for the page labelled `huddle-hub`.
+2. If none, look for a page titled `Huddles` in that space. If it is the space home page, ask whether to use it as the hub. Do not edit its content.
+3. If neither exists, ask before creating a hub. Create it with the title `Huddles`, the label `huddle-hub`, a short note ("Collaboration pages, one per ticket. Created by the huddle skill."), and a Content by Label list for the label `huddle`.
+4. Always identify the hub by space plus page, never by title alone. Titles repeat across spaces.
 
 Rules:
 
-1. Create every huddle page as a child of the hub page in `HUDDLE_SPACE`. Never create in a personal space.
-2. If `HUDDLE_SPACE` is not set, ask: "Which Confluence space should huddle pages live in?" Do not guess or use a default space. A search for existing pages labelled `huddle` can suggest the space they already use.
-3. If the hub page does not exist, ask before creating it. Create it with the title `Huddles` and a short note: "Collaboration pages, one per ticket. Created by the huddle skill." Add a Content by Label list on it for the label `huddle`, so people who do not use the skill can browse all huddles.
-4. The list mode (`huddle PROJ`) searches within `HUDDLE_SPACE` first, then everywhere if nothing is found.
+1. Create every huddle page as a child of the hub in `HUDDLE_SPACE`. Never create in a personal space.
+2. Name the exact space and hub page when asking for confirmation to create.
+3. If the hub exists but has no Content by Label list, say so and offer to add it. Ask before editing an existing page.
+4. List mode (`huddle PROJ`) searches within `HUDDLE_SPACE` first, then everywhere if nothing is found.
+
+## Admin setup (once per organization)
+
+1. Create a Confluence space named `Huddles`. Give everyone who collaborates on tickets (PM, engineering, design, architecture) access that allows viewing and editing pages.
+2. Create a page titled `Huddles` in that space with the label `huddle-hub`. Add a Content by Label list for the label `huddle`.
+3. Do not restrict the hub page or the space beyond that audience. Huddle pages inherit space permissions, and the skill never changes them.
 
 ## Permissions
 
