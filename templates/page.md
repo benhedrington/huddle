@@ -1,7 +1,7 @@
 # [PROJ-123] Huddle
 
 Ticket: PROJ-123 (link)
-Opened by: name, date
+Opened by: <display name>, <date>
 Status: open
 
 Add to any section. Tag what you add with your name (and role if you like). Disagree by replying or commenting, not by editing someone else's text.
@@ -24,8 +24,6 @@ What is hard, what is known, what is risky?
 |---|---|---|---|
 
 ## Open questions
-
-- [ ] Question (who raised it)
 
 ## Links
 

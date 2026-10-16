@@ -37,7 +37,7 @@ Lookup is flexible. Match on any of these values, and also on a close variant (a
 2. **If found:** open the page. Summarize it through the user's role lens (below). Show open questions and any empty sections. Stop.
 3. **If not found:** search Confluence for the page label `huddle-<key>`, then for the title `[<KEY>] Huddle`, then loosely for pages that mention the ticket key. This catches a page whose ticket link was lost. If one is found, repair the ticket link and label (step 6), then open it. Do not create a new page.
 4. **If still not found:** check the ticket level. If it is a story or a small fix, say so and suggest the parent epic. Otherwise resolve the space and hub (see Where pages live), then ask in one question: "No huddle page for <KEY>. Create one in the Huddles space (<space key>), under <hub page>?"
-5. **On yes:** search once more right before creating, in case a teammate just did. Then create the page from `templates/page.md` under the hub page in `HUDDLE_SPACE` (see Where pages live; the confirmation named the space and hub), with the exact title and both labels from the table. Do not touch permissions.
+5. **On yes:** search once more right before creating, in case a teammate just did. Then create the page from `templates/page.md` under the hub page in `HUDDLE_SPACE` (see Where pages live; the confirmation named the space and hub), with the exact title and both labels from the table. Fill `Opened by` with the current user's display name, resolved with `getJiraCurrentUser` (reached through `discover`, then `executeRead`). Do not rely on `atlassianUserInfo`: it returns only the account ID. Treat the connector's logged-in user as the person running the skill. If the name cannot be resolved, write `Opened by: (name not available), <date>` and mention this in the reply. Do not touch permissions.
 6. **After creating (or repairing):** read back who can view and edit the page (see Permissions). Only if the other roles can open it, on the Jira issue, add the label `huddle`, add the remote link titled `Huddle`, and post the comment `Huddle page opened: <page URL>`, followed by a line mentioning the PM, engineer, designer and architect on the ticket if they are known. That comment's timestamp records when the page opened.
 
 Always ask before creating. Never create a second page for a ticket that already has one.
@@ -131,8 +131,11 @@ The whole page is always readable and writable by everyone. If the user does not
 ## Writing rules
 
 - Tag every contribution with the author's name and, optionally, their role.
-- Never overwrite or delete someone else's text. Disagree with a reply or an inline comment so the discussion stays visible.
-- Check the page version immediately before every write (`listConfluenceContentVersions`, newest first). If it changed since you read it, read again and merge. Never replace.
+- Never overwrite or delete text that another person added. Disagree with a reply or an inline comment so the discussion stays visible.
+- Untouched template placeholders are not contributions. The first real contribution to a section replaces any untouched placeholder there (a placeholder task item or blank table row). "Untouched" means the text matches the template exactly. If unsure whether text is a placeholder, leave it and ask.
+- Guidance text under a heading stays. Add contributions after it, never in place of it.
+- Add Open questions as sibling task items in the existing task list, or as the first item if the section is empty. Never use an insert-after edit that wraps the new item in a new list; that nests it under the previous item. After the first edit on a site, read the page back to confirm the item is top-level, and fix it if nested.
+- Check the page version immediately before every write (`listConfluenceContentVersions`, newest first). If it changed since you read it, read again and merge. Never replace. If a write times out, check the version before retrying so the edit is not applied twice.
 - Record decisions with who agreed and the reason.
 - Flag empty sections when opening the page. Do not fill them with invented content.
 
@@ -149,6 +152,7 @@ Written against the Atlassian Rovo MCP server's supported-tools page (checked Oc
 | Need | Current tool |
 |---|---|
 | Site id (required for calls) | `getAccessibleAtlassianResources` (cloudId) |
+| Current user display name (for `Opened by`) | `getJiraCurrentUser` (via `discover`, `executeRead`) |
 | Read ticket | `getJiraIssue` |
 | Read ticket remote links | `listJiraIssueRemoteIssueLinks` |
 | Add remote link `Huddle` | `createJiraIssueRemoteIssueLink` |
@@ -171,4 +175,7 @@ Notes:
 - Open questions are written as Confluence tasks (`- [ ]` in the template), so `listConfluenceTasks` counts the unchecked ones for the list view.
 - Last editor and last-updated for the list view come from the page or `listConfluenceContentVersions`. If not returned, show the date only.
 - If a remote link cannot be added, use the label plus the pinned comment (see Exact names).
+- Many of these tools are only reachable through `discover` and the `executeRead` / `executeWrite` wrappers. Pass `cloudId` at the top level and inside `inputs`. If a wrapper call fails with "Invalid URL" for the cloud ID, the top-level `cloudId` is missing.
+- `editJiraIssue` sets the whole `labels` array rather than appending. Read the current labels first and send the full list.
+- A write can time out without being applied. Check `listConfluenceContentVersions` before retrying.
 - Not confirmed from the docs: whether `createConfluenceContent` takes a parent page and labels directly. The table assumes it may not and adds them in separate steps. Check on first run.
